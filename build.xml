@@ -1,0 +1,43 @@
+<?xml version="1.0" ?> 
+<project name="mavenproject2" default="war" basedir=".">
+    
+    <property file="build.properties"/>
+
+    <path id="compile.classpath">
+        <fileset dir="${webinf.dir}/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+        
+    <path id="tomcat.classpath">
+        <fileset dir="${j2ee.server.home}/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}"/>
+    </path>
+	
+    <target name="init">
+        <mkdir dir="target/classes"/>
+    </target>
+	
+    <target name="compile" depends="init" >
+        <javac destdir="target/classes" debug="true" srcdir="src" includeantruntime="true">
+            <classpath refid="compile.classpath"/>
+            <classpath refid="tomcat.classpath"/>
+        </javac>
+    </target>
+	
+    <target name="war" depends="compile">
+        <war destfile="${target.war}" webxml="${webinf.dir}/web.xml">
+            <lib dir="${webinf.dir}/lib"/>
+            <classes dir="target/classes"/>
+        </war>
+    </target>
+	
+    <target name="clean">
+        <delete dir="${target.dir}" quiet="true">
+            <filename name="${target.war}"/>
+        </delete>
+    </target>
+	
+</project>
